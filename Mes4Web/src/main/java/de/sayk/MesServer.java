@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import de.sayk.data.ObjectWorld;
 import de.sayk.data.objects.Machine;
 import de.sayk.data.objects.Order;
@@ -61,7 +67,7 @@ public class MesServer implements Runnable, MesService {
 		try {
 			serverSocket = new ServerSocket(2018);
 			log.info("Server listening on port:2018");
-		
+
 		} catch (IOException e) {
 			log.error("problem starting TCI/IP Server", e);
 			e.printStackTrace();
@@ -69,29 +75,27 @@ public class MesServer implements Runnable, MesService {
 
 		while (!interrupt) {
 			try {
-                s = serverSocket.accept();
-            } catch (IOException e) {
-    			log.error("problem accepting socket", e);
-    			e.printStackTrace();
-            }
-            // new thread for a client
-            new MessageThread(s).start();
+				s = serverSocket.accept();
+			} catch (IOException e) {
+				log.error("problem accepting socket", e);
+				e.printStackTrace();
+			}
+			// new thread for a client
+			new MessageThread(s).start();
 			log.info("new client accepted socket on port:2018");
 		}
 	}
-	
-	
-	
+
 	public class MessageThread extends Thread {
-	    protected Socket socket;
+		protected Socket socket;
 
-	    public MessageThread(Socket clientSocket) {
-	        this.socket = clientSocket;
-	    }
+		public MessageThread(Socket clientSocket) {
+			this.socket = clientSocket;
+		}
 
-	    public void run() {
+		public void run() {
 
-	    	DataInputStream dataInputStream = null;
+			DataInputStream dataInputStream = null;
 			DataOutputStream dataOutputStream = null;
 
 			try {
@@ -186,9 +190,8 @@ public class MesServer implements Runnable, MesService {
 					}
 				}
 			}
-	    
-	    
-	    }
+
+		}
 	}
 
 	private static String clientNamelookupp(int cid) {
@@ -199,7 +202,7 @@ public class MesServer implements Runnable, MesService {
 		}
 
 		if (m == null)
-			return "??? id " + cid +" not found";
+			return "??? id " + cid + " not found";
 		else
 			return m.getName();
 	}
@@ -470,4 +473,7 @@ public class MesServer implements Runnable, MesService {
 	public void addClientListener(ClientListener cl) {
 		clientListeners.add(cl);
 	}
+
+	
+	
 }

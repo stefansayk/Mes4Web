@@ -18,7 +18,7 @@ import de.sayk.data.objects.Variant;
 
 
 
-@Path("neworder")
+@Path("/neworder")
 public class RestApiNewOrder {
 
 	

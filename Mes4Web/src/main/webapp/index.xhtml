@@ -10,36 +10,30 @@
 </h:head>
 
 
-<h:form>
-	<p:growl id="messages" showDetail="true" />
-
-	<div class="card">
-		<h5>Overlay</h5>
-		<p:commandButton id="dynaButton" value="Show" type="button"
-			icon="pi pi-bars" />
-		<p:menu overlay="true" trigger="dynaButton" my="left top"
-			at="left bottom">
-			<p:submenu label="Options">
-				<p:menuitem value="Save (Non-Ajax)" action="#{menuView.save}"
-					update="messages" ajax="false" icon="pi pi-save" />
-				<p:menuitem value="Update" action="#{menuView.update}"
-					update="messages" icon="pi pi-refresh" />
-				<p:menuitem value="Delete" action="#{menuView.delete}"
-					update="messages" icon="pi pi-times" />
-			</p:submenu>
-		</p:menu>
-	</div>
-</h:form>
-
 
 
 <h:body>
 
+	<h:form>
+
+		<p:growl id="messages" showDetail="true" />
+
+		<div class="card">
+			<p:commandButton id="dynaButton" value="ShowIt" type="button"
+				icon="pi pi-bars" />
+			<p:menu overlay="true" trigger="dynaButton" my="left top"
+				at="left bottom" model="#{menuView.model}" />
+		</div>
+
+
+	</h:form>
 
 	<div class="card" style="text-align: left">
 		<h:form id="form">
 			<p:panelGrid columns="2" styleClass="ui-noborder"
 				style="border:0px !important; background:none;margin:0 auto">
+
+
 
 
 				<p:card>
