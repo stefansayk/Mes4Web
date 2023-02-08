@@ -12,12 +12,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeRequestContext;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import de.sayk.MesTestClient;
+import de.sayk.data.BigData;
+import de.sayk.data.Database;
 
 @ManagedBean
 @ApplicationScoped
@@ -98,22 +102,40 @@ public class MenuView implements Serializable {
 	// blöd, aber in JSF lassen sich keine Parameter in Methodeaufrufen übergeben!
 	public void ls0() {
 		addMessage("SQL Skript", lsen[0]);
+		startScript(0);
 	}
 
 	public void ls1() {
 		addMessage("SQL Skript", lsen[1]);
+		startScript(1);
 	}
 
 	public void ls2() {
 		addMessage("SQL Skript", lsen[2]);
+		startScript(2);
 	}
 
 	public void ls3() {
 		addMessage("SQL Skript", lsen[3]);
+		startScript(3);
 	}
 
 	public void ls4() {
 		addMessage("SQL Skript", lsen[4]);
+		startScript(4);
+	}
+	
+	private void startScript(int i) {
+
+		Database.setup("sql/" + lsen[i]);
+
+		if (lsen[i].equals("Data Intelligence.sql"))
+			BigData.addProductionData();
+		
+
+		PrimeFaces.current().ajax().update("idHeader:lager");
+		PrimeFaces.current().ajax().update("idPlanedOrder:table");
+
 	}
 
 	public void redirect() throws IOException {

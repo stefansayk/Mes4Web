@@ -5,6 +5,11 @@ import java.util.List;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.bubble.BubbleChartDataSet;
+import org.primefaces.model.charts.bubble.BubbleChartModel;
+import org.primefaces.model.charts.data.BubblePoint;
+
 import de.sayk.data.ObjectWorld;
 import de.sayk.data.objects.Customer;
 
@@ -37,5 +42,23 @@ public class Namen {
 		return kunden;
 	}
 	
+	
+    public void createBubbleModel() {
+    	BubbleChartModel bubbleModel = new BubbleChartModel();
+        ChartData data = new ChartData();
+
+        BubblePoint bp = new BubblePoint(20, 30, 15);
+       
+        
+        BubbleChartDataSet dataSet = new BubbleChartDataSet();
+        List<BubblePoint> values = new ArrayList<>();
+        values.add(new BubblePoint(20, 30, 15));
+        values.add(new BubblePoint(40, 10, 10));
+        dataSet.setData(values);
+        dataSet.setBackgroundColor("rgb(255, 99, 132)");
+        dataSet.setLabel("First Dataset");
+        data.addChartDataSet(dataSet);
+        bubbleModel.setData(data);
+    }
 	
 }

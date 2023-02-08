@@ -5,6 +5,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
+
+
 <h:head>
 	<title>JSF Test Listen</title>
 </h:head>
@@ -14,71 +16,173 @@
 
 <h:body>
 
+
+
 	<h:form>
 
 		<p:growl id="messages" showDetail="true" />
 
 		<div class="card">
-			<p:commandButton id="dynaButton" value="ShowIt" type="button"
+			<p:commandButton id="dynaButton" value="Mes4Web" type="button"
 				icon="pi pi-bars" />
 			<p:menu overlay="true" trigger="dynaButton" my="left top"
 				at="left bottom" model="#{menuView.model}" />
 		</div>
 
-
 	</h:form>
 
 	<div class="card" style="text-align: left">
-		<h:form id="form">
-			<p:panelGrid columns="2" styleClass="ui-noborder"
+		<h:form id="idHeader">
+			<p:panelGrid id="lager" columns="2" styleClass="ui-noborder"
 				style="border:0px !important; background:none;margin:0 auto">
 
-
-
-
-				<p:card>
+				<p:card style="width: 50rem; height: 20rem; margin-bottom: 2em">
 					<f:facet name="header">
 						<img alt="user header" src="./OerSfmSoftware.png" />
 					</f:facet>
 					<f:facet name="title">sfm MES-Manufacturing Execution System</f:facet>
+					<f:facet name="subtitle">https://github.com/stefansayk/Mes4Web</f:facet>
 
 				</p:card>
 
+				<p:card style="width: 50rem; height: 20rem; margin-bottom: 2em">
+					<f:facet name="title">Lager</f:facet>
 
-				<p:card style="width: 50rem; margin-bottom: 2em">
-					<f:facet name="title">offene Aufträge</f:facet>
+					<p:dataTable id="idLagerDaten" var="part"
+						value="#{parts.allPartsInStore}">
 
-					<p:dataTable var="einName" value="#{namen.liste}">
-						<p:column headerText="Name">
-							<h:outputText value=" #{einName}" />
+						<p:column headerText="" style="width: 1.2rem">
+							<h:outputText value=" "
+								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color1}; display: inline-block;" />
+							<h:outputText value=" #{part.rfid1}" />
+							<h:outputText value=" #{part.state1}" />
 						</p:column>
+
+						<p:column headerText="" style="width: 1.2rem">
+							<h:outputText value=" "
+								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color2}; display: inline-block;" />
+							<h:outputText value=" #{part.rfid2}" />
+							<h:outputText value=" #{part.state2}" />
+						</p:column>
+
+						<p:column headerText="" style="width: 1.2rem">
+							<h:outputText value=" "
+								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color3}; display: inline-block;" />
+							<h:outputText value=" #{part.rfid3}" />
+							<h:outputText value=" #{part.state3}" />
+						</p:column>
+
 					</p:dataTable>
 
-				</p:card>
-
-
-				<p />
-
-				<p:card style="width: 50rem; margin-bottom: 2em">
-					<f:facet name="title">fertige Aufträge</f:facet>
-
-					<p:dataTable var="kunde" value="#{namen.kundenliste}">
-						<p:column headerText="Name">
-							<h:outputText value=" #{kunde.name}" />
-						</p:column>
-						<p:column headerText="Name">
-							<h:outputText value=" #{kunde.contact}" />
-						</p:column>
-					</p:dataTable>
 
 				</p:card>
-
-
 
 
 			</p:panelGrid>
 		</h:form>
 	</div>
+
+	<div class="card" style="text-align: left">
+
+		<h:form id="idPlanedOrder">
+			<p:card id="table" style="margin-bottom: 2em">
+				<f:facet name="title">geplante Aufträge</f:facet>
+
+				<p:dataTable var="planed" value="#{orders.planed}">
+
+					<p:column headerText="" style="width: 1.2rem">
+						<h:outputText value="___"
+							style="background-color: #{planed.webColor}; color: #{planed.webColor}" />
+					</p:column>
+					<p:column headerText="Auftragsnummer">
+						<h:outputText value=" #{planed.id}" />
+					</p:column>
+					<p:column headerText="RFID">
+						<h:outputText value=" #{planed.part.rfid}" />
+					</p:column>
+					<p:column headerText="Produkt">
+						<h:outputText value=" #{planed.product.name}" />
+					</p:column>
+					<p:column headerText="Variante">
+						<h:outputText value=" #{planed.variant.name}" />
+					</p:column>
+					<p:column headerText="Kunde">
+						<h:outputText value=" #{planed.costumer.name}" />
+					</p:column>
+				</p:dataTable>
+
+			</p:card>
+		</h:form>
+
+		<p:card style="margin-bottom: 2em">
+			<f:facet name="title">Fahrradcomputer id=51</f:facet>
+
+
+			<p:chronoline value="#{chronolineView.events}" var="event"
+				layout="horizontal" align="top">
+
+				<p:card style="margin-right: 2em">
+					<f:facet name="title">
+                #{event.status}
+            </f:facet>
+					<f:facet name="subtitle">
+                #{event.date}
+            </f:facet>
+
+				</p:card>
+
+				<f:facet name="marker">
+					<span class="custom-marker shadow-1"
+						style="background-color: #{event.color}"><i
+						class="#{event.icon}" /></span>
+				</f:facet>
+
+			</p:chronoline>
+
+
+		</p:card>
+	</div>
+
+
+
+
+
+
+
+	<style>
+.custom-marker {
+	display: flex;
+	width: 4rem;
+	height: 3.5rem;
+	align-items: center;
+	justify-content: center;
+	color: #ffffff;
+	border-radius: 50%;
+	z-index: 1;
+}
+
+.ui-chronoline-event-content, .ui-chronoline-event-opposite {
+	line-height: 1;
+}
+
+@media screen and (max-width: 960px) {
+	.customized-chronoline .ui-chronoline-event:nth-child(even) {
+		flex-direction: row !important;
+	}
+	.customized-chronoline .ui-chronoline-event:nth-child(even) .ui-chronoline-event-content
+		{
+		text-align: left !important;
+	}
+	.customized-chronoline .ui-chronoline-event-opposite {
+		flex: 0;
+	}
+	.customized-chronoline .ui-card {
+		margin-top: 1rem;
+	}
+}
+</style>
+
+
 
 
 
