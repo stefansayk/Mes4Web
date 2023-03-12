@@ -857,7 +857,7 @@ public class ObjectWorld {
 		String query = "SELECT * FROM MES.ORDERS WHERE ORDER_ID=" + id;
 
 		Order o = null;
-		
+
 		try {
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -903,6 +903,7 @@ public class ObjectWorld {
 		return o;
 
 	}
+
 	public static Order getOrderForPart(Part part) throws Exception {
 		return getOrderForRfid(part.getRfid());
 	}
@@ -1014,6 +1015,58 @@ public class ObjectWorld {
 
 		return temp;
 
+	}
+
+	public static void removePartFromStore(int stockNo) throws Exception {
+
+		PreparedStatement stmt = null;
+		StringBuffer update = new StringBuffer();
+		update.append("UPDATE MES.STOCKYARDS SET ");
+
+		update.append("PART_ID=0 ");
+		update.append("WHERE STOCKYARD_ID=" + stockNo);
+
+		try {
+			stmt = con.prepareStatement(update.toString());
+			stmt.execute();
+		} catch (SQLException e) {
+			log.error("problem with query: " + update.toString(), e);
+			throw new Exception("can't remove part in stock:" + stockNo);
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void addPartToStore(int stockNo, int partId) throws Exception {
+
+		PreparedStatement stmt = null;
+		StringBuffer update = new StringBuffer();
+		update.append("UPDATE MES.STOCKYARDS SET ");
+
+		update.append("PART_ID=" + partId + " ");
+		update.append("WHERE STOCKYARD_ID=" + stockNo);
+
+		try {
+			stmt = con.prepareStatement(update.toString());
+			stmt.execute();
+		} catch (SQLException e) {
+			log.error("problem with query: " + update.toString(), e);
+			throw new Exception("can't add part " + partId + " in stock:" + stockNo);
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

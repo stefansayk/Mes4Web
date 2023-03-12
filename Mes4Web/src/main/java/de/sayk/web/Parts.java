@@ -22,21 +22,27 @@ public class Parts {
 
 		Part[] parts = ObjectWorld.getAllPartsInStore();
 
-		storeLines.add(new StoreLine(parts[0], parts[2], parts[4]));
-		storeLines.add(new StoreLine(parts[1], parts[3], parts[5]));
+		storeLines.add(new StoreLine(parts[0], parts[2], parts[4], 1, 3, 5));
+		storeLines.add(new StoreLine(parts[1], parts[3], parts[5], 2, 4, 6));
 
 		return storeLines;
 	}
 
 	public static class StoreLine {
+		int no1;
+		int no2;
+		int no3;
 		private Part p1;
 		private Part p2;
 		private Part p3;
 
-		public StoreLine(Part part1, Part part2, Part part3) {
+		public StoreLine(Part part1, Part part2, Part part3, int no1,int no2,int no3) {
 			this.p1 = part1;
 			this.p2 = part2;
 			this.p3 = part3;
+			this.no1 = no1;
+			this.no2 = no2;
+			this.no3 = no3;
 		}
 
 		public String getRfid1() {
@@ -91,6 +97,18 @@ public class Parts {
 			if (p3 == null)
 				return "";
 			return p3.getWebColor();
+		}
+
+		public int getNo1() {
+			return no1;
+		}
+
+		public int getNo2() {
+			return no2;
+		}
+
+		public int getNo3() {
+			return no3;
 		}
 
 	}

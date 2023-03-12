@@ -10,7 +10,7 @@ public interface MesService  extends Remote{
 
 	public abstract OrderList getAllOrdersByState(OrderState os) throws java.rmi.RemoteException;
 
-	public abstract void refreshAllPartsInStore() throws java.rmi.RemoteException;
+	public abstract void refreshAllPartsInStore();
 
 	public abstract void savePart(Part p) throws Exception;
 	

@@ -8,7 +8,7 @@
 
 
 <h:head>
-	<title>JSF Test Listen</title>
+	<title>sfm MES</title>
 </h:head>
 
 
@@ -18,7 +18,7 @@
 
 
 
-	<h:form>
+	<h:form id="idMES">
 
 		<p:growl id="messages" showDetail="true" />
 
@@ -33,6 +33,7 @@
 
 	<div class="card" style="text-align: left">
 		<h:form id="idHeader">
+	    <p:poll interval="1" update="idHeader"/>
 			<p:panelGrid id="lager" columns="2" styleClass="ui-noborder"
 				style="border:0px !important; background:none;margin:0 auto">
 
@@ -54,6 +55,7 @@
 						<p:column headerText="" style="width: 1.2rem">
 							<h:outputText value=" "
 								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color1}; display: inline-block;" />
+							<h:outputText value=" #{part.no1}:" />
 							<h:outputText value=" #{part.rfid1}" />
 							<h:outputText value=" #{part.state1}" />
 						</p:column>
@@ -61,6 +63,7 @@
 						<p:column headerText="" style="width: 1.2rem">
 							<h:outputText value=" "
 								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color2}; display: inline-block;" />
+							<h:outputText value=" #{part.no2}:" />
 							<h:outputText value=" #{part.rfid2}" />
 							<h:outputText value=" #{part.state2}" />
 						</p:column>
@@ -68,6 +71,7 @@
 						<p:column headerText="" style="width: 1.2rem">
 							<h:outputText value=" "
 								style="width: 80px; height: 80px; border-radius: 50%; background-color: #{part.color3}; display: inline-block;" />
+							<h:outputText value=" #{part.no3}:" />
 							<h:outputText value=" #{part.rfid3}" />
 							<h:outputText value=" #{part.state3}" />
 						</p:column>
@@ -85,6 +89,8 @@
 	<div class="card" style="text-align: left">
 
 		<h:form id="idPlanedOrder">
+	    <p:poll interval="1" update="idPlanedOrder"/>
+	    
 			<p:card id="table" style="margin-bottom: 2em">
 				<f:facet name="title">geplante Aufträge</f:facet>
 
@@ -114,33 +120,40 @@
 			</p:card>
 		</h:form>
 
-		<p:card style="margin-bottom: 2em">
-			<f:facet name="title">Fahrradcomputer id=51</f:facet>
 
+		<h:form id="idActiveOrder">
+	    <p:poll interval="1" update="idActiveOrder"/>
+		
+			<p:card id="grid" style="margin-bottom: 2em">
+				<p:dataGrid var="prod" value="#{chronolineView.products}"
+					columns="1">
+					<p:card style="margin-bottom: 2em">
+						<f:facet name="title">#{prod.description}</f:facet>
 
-			<p:chronoline value="#{chronolineView.events}" var="event"
-				layout="horizontal" align="top">
+						<p:chronoline value="#{prod.prodSteps}" var="productionStep"
+							layout="horizontal" align="top">
 
-				<p:card style="margin-right: 2em">
-					<f:facet name="title">
-                #{event.status}
+							<p:card style="margin-right: 2em">
+								<f:facet name="title">
+                #{productionStep.machine}
             </f:facet>
-					<f:facet name="subtitle">
-                #{event.date}
+								<f:facet name="subtitle">
+                #{productionStep.details}
             </f:facet>
 
-				</p:card>
+							</p:card>
 
-				<f:facet name="marker">
-					<span class="custom-marker shadow-1"
-						style="background-color: #{event.color}"><i
-						class="#{event.icon}" /></span>
-				</f:facet>
+							<f:facet name="marker">
+								<span class="custom-marker shadow-1"
+									style="background-color: #{productionStep.color}"><i
+									class="#{productionStep.icon}" /></span>
+							</f:facet>
 
-			</p:chronoline>
-
-
-		</p:card>
+						</p:chronoline>
+					</p:card>
+				</p:dataGrid>
+			</p:card>
+		</h:form>
 	</div>
 
 

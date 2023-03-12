@@ -12,6 +12,7 @@ public class ProductionStep implements Serializable{
 	private Machine machine;
 	int para1;
 	int para2;
+	boolean isActive;
 
 	public ProductionStep(int id, Machine machine, int para1, int para2) {
 		super();
@@ -59,7 +60,7 @@ public class ProductionStep implements Serializable{
 		String p2 = this.getPara2()==-1 ? "OID" : this.getPara2() + "";
 		
 		StringWriter sw = new StringWriter();
-		sw.append(machine.getName());
+//		sw.append(machine.getName());
 		sw.append(" (");
 		if(this.getPara1()!=0) {
 			sw.append(machine.getNamePara1());
@@ -82,4 +83,14 @@ public class ProductionStep implements Serializable{
 		return "ProductionStep [id=" + id + ", machine=" + machine + ", para1=" + para1 + ", para2=" + para2 + "]";
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	
+	
 }

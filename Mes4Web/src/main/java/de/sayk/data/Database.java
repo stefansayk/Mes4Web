@@ -11,15 +11,21 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
+import de.sayk.DatabaseListener;
+import de.sayk.Dir;
 import de.sayk.logging.Logger;
 
 public class Database {
 	private static Logger log = Logger.getLogger(Database.class.getName());
 
+	private static ArrayList<DatabaseListener> dbListeners = new ArrayList<DatabaseListener>();
+
+	
 	private static String url = null;
 	private static String user = "";
 	private static String password = "";
@@ -30,7 +36,7 @@ public class Database {
 		Reader reader = null;
 
 		try {
-			reader = new FileReader("mes.properties");
+			reader = new FileReader(Dir.getHomePath() + "mes.properties");
 
 			Properties prop = new Properties();
 			prop.load(reader);
@@ -52,6 +58,11 @@ public class Database {
 
 	}
 
+	public static void addDataListener(DatabaseListener dl) {
+		dbListeners.add(dl);
+	}
+
+	
 	public static Connection getCon() {
 
 		if (url == null)
@@ -102,6 +113,12 @@ public class Database {
 			// Execute script
 			sr.runScript(reader);
 
+			
+			//sag allen Bescheid, die es wissen wollen 
+			for (DatabaseListener databaseListener : dbListeners) {
+				databaseListener.reset();
+			}
+			
 		} catch (Exception ex) {
 			log.error("problem executing script: " + fileName, ex);
 			

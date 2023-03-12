@@ -2,6 +2,8 @@ package de.sayk.logging;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import de.sayk.Dir;
+
 public class Logger {
 
 	private org.apache.log4j.Logger log;
@@ -10,7 +12,7 @@ public class Logger {
 	public static Logger getLogger(String className) {
 
 		if (isFirstRun) {
-			PropertyConfigurator.configure("log4j.properties");
+			PropertyConfigurator.configure(Dir.getHomePath() + "log4j.properties");
 			isFirstRun = false;
 		}
 

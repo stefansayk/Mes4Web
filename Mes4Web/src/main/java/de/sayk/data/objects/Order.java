@@ -145,6 +145,10 @@ public class Order implements Serializable {
 		startStep = (new Date()).getTime();
 		if (actStep == 0)
 			startProcess = (new Date()).getTime();
+
+		getVariant().getWorkflow().get(actStep).setActive(true);
+
+	
 	}
 
 	public void endProcess(int nextStep) {
@@ -166,6 +170,9 @@ public class Order implements Serializable {
 				ObjectWorld.logProcessApi(part.getRfid(), variant.getWorkflow().get(actStep).getMachine().getId(),
 						now - startProcess, "production complete varaiant: " + variant.getName());
 			}
+			
+			getVariant().getWorkflow().get(actStep).setActive(false);
+			
 
 			if (nextStep > 0)
 				actStep = nextStep; // ggf. Produktionsschritte ueberspringen

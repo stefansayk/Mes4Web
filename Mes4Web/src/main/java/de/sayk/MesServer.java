@@ -11,12 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import de.sayk.data.ObjectWorld;
 import de.sayk.data.objects.Machine;
 import de.sayk.data.objects.Order;
@@ -248,6 +242,13 @@ public class MesServer implements Runnable, MesService {
 					sr.returnCode = o.getId();
 					orderFound = true;
 
+					// Update in Datenbank
+					try {
+						ObjectWorld.saveOrder(o);
+					} catch (Exception e) {
+						log.error(e);
+					}
+
 					for (OrderListener ol : orderListeners) {
 						// alle informieren Auftrag wird aktiv angezeigt
 						try {
@@ -256,13 +257,6 @@ public class MesServer implements Runnable, MesService {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}
-
-					// Update in Datenbank
-					try {
-						ObjectWorld.saveOrder(o);
-					} catch (Exception e) {
-						log.error(e);
 					}
 
 					// zur Liste der Auftraege hinzufuegen
@@ -320,15 +314,6 @@ public class MesServer implements Runnable, MesService {
 			if (!activeOrder.isFinish()) {
 
 				activeOrder.startProcess();
-				for (OrderListener ol : orderListeners) {
-					try {
-						ol.startOrder(activeOrder);
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
 				sr.returnCode = 1;
 
 				for (OrderListener ol : orderListeners) {
@@ -345,10 +330,21 @@ public class MesServer implements Runnable, MesService {
 				if (activeOrder.isFirstStepForStore()) {
 					if (lastPlaceNo != 0) {
 						parts[lastPlaceNo - 1] = null;
+
+						
+						//in Datenbank löschen
+						try {
+							ObjectWorld.removePartFromStore(lastPlaceNo);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+						
 						for (PartListener pl : partListeners) {
 							try {
 								pl.updatePart(null, lastPlaceNo);
-							} catch (RemoteException e) {
+							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -359,10 +355,22 @@ public class MesServer implements Runnable, MesService {
 					int placeNo = getFreePlaceNo();
 					if (placeNo != 0) {
 						parts[placeNo - 1] = activeOrder.getPart();
+
+						
+						//In Datenbank eintragen
+						try {
+							ObjectWorld.addPartToStore(placeNo, activeOrder.getPart().getId());
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+						
+						
 						for (PartListener pl : partListeners) {
 							try {
 								pl.updatePart(activeOrder.getPart(), placeNo);
-							} catch (RemoteException e) {
+							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -386,6 +394,16 @@ public class MesServer implements Runnable, MesService {
 				activeOrder.endProcess(nextStep);
 
 				sr.returnCode = 1;
+				
+				
+				// Update in Datenbank
+				try {
+					ObjectWorld.saveOrder(activeOrder);
+					ObjectWorld.savePart(activeOrder.getPart());
+				} catch (Exception e) {
+					log.error(e);
+				}
+
 
 				for (OrderListener ol : orderListeners) {
 					// alle informieren Arbeitsschritt wird fertig angezeigt
@@ -401,6 +419,7 @@ public class MesServer implements Runnable, MesService {
 					for (OrderListener ol : orderListeners) {
 						try {
 							ol.finishOrder(activeOrder);
+							orders.remove(rfidNo);
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -424,7 +443,8 @@ public class MesServer implements Runnable, MesService {
 
 		// load fresh form database
 		parts = ObjectWorld.getAllPartsInStore();
-
+		orders = new HashMap<Integer, Order>();
+		
 		log.debug("benachitige " + partListeners.size() + " Listener");
 		for (PartListener pl : partListeners) {
 			log.debug("benachitige " + parts.length + " Teile");

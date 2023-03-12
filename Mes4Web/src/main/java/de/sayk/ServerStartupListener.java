@@ -13,7 +13,7 @@ public class ServerStartupListener implements ServletContextListener {
 
 	private static MesServer msrv;
 	private static Thread serverThread;
-
+	public static MesService ms;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -29,6 +29,13 @@ public class ServerStartupListener implements ServletContextListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		try {
+			ms = msrv;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override

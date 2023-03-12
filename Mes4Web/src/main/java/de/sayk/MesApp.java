@@ -8,7 +8,7 @@ import de.sayk.data.Database;
 import de.sayk.logging.Logger;
 
 public class MesApp {
-
+    
 	private static Logger log = Logger.getLogger(MesApp.class.getName());
 
 	public static String title = "sfmMES";
@@ -19,6 +19,7 @@ public class MesApp {
 	private static Thread serverThread;
 	public static MesService ms;
 
+	
 	public static void main(String[] args) {
 
 		log.debug("MES gestartet...");
