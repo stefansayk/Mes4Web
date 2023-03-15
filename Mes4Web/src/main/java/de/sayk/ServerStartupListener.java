@@ -1,9 +1,16 @@
 package de.sayk;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.ws.rs.ProcessingException;
+
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
 import de.sayk.logging.Logger;
 
@@ -17,6 +24,8 @@ public class ServerStartupListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
+		
+		// MES Server starten
 		try {
 			log.debug("init servlet...");
 			msrv = new MesServer();
@@ -35,6 +44,28 @@ public class ServerStartupListener implements ServletContextListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		//REST Server starten
+		ResourceConfig config = new ResourceConfig().packages("de.sayk.rest");
+        config.property(ServerProperties.TRACING, "ALL");
+        config.property(ServerProperties.TRACING_THRESHOLD, "VERBOSE");
+
+        try {
+			JettyHttpContainerFactory.createServer(
+			    new URI("http://localhost:8042/"),
+			    config
+			).start();
+		} catch (ProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
 		
 	}
 

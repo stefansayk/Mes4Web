@@ -7,7 +7,7 @@ import java.util.jar.JarFile;
 import de.sayk.data.Database;
 import de.sayk.logging.Logger;
 
-public class MesApp {
+public class MesApp  {
     
 	private static Logger log = Logger.getLogger(MesApp.class.getName());
 

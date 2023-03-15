@@ -2,6 +2,8 @@ package de.sayk.web;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -16,7 +18,6 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import de.sayk.Dir;
-import de.sayk.MesApp;
 import de.sayk.MesTestClient;
 import de.sayk.ServerStartupListener;
 import de.sayk.data.BigData;
@@ -40,13 +41,24 @@ public class MenuView implements Serializable {
 		return environment.indexOf("eclipse") > -1;
 	}
 
+	private static String getHostAddress() {
+		String host = "localhost";
+
+		try {
+			host = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return host;
+	}
+
 	@PostConstruct
 	public void init() {
 
-		
 		model = new DefaultMenuModel();
 
-		
 		try {
 			String sqlFolder = Dir.getHomePath() + "sql";
 
@@ -63,7 +75,6 @@ public class MenuView implements Serializable {
 //			} else {
 //				System.out.println("SQL Ordner existiert nicht.");
 //			}
-
 
 			// First submenu
 			DefaultSubMenu firstSubmenu = DefaultSubMenu.builder().label("Lernsituationen").build();
@@ -92,15 +103,15 @@ public class MenuView implements Serializable {
 			DefaultSubMenu secondSubmenu = DefaultSubMenu.builder().label("Navigations").build();
 
 			item = DefaultMenuItem.builder().value("Neuen Auftrag anlegen...").icon("pi pi-external-link")
-					.url("http://127.0.0.1:8042/mes/neworder").build();
+					.url("http://" + getHostAddress() + ":8042/neworder").build();
 			secondSubmenu.getElements().add(item);
 
-			item = DefaultMenuItem.builder().value("Starte Test SPS").icon("pi pi-server").command("#{menuView.startSPS}")
-					.update("messages").build();
+			item = DefaultMenuItem.builder().value("Starte Test SPS").icon("pi pi-server")
+					.command("#{menuView.startSPS}").update("messages").build();
 			secondSubmenu.getElements().add(item);
 
-			item = DefaultMenuItem.builder().value("Stoppe Test SPS").icon("pi pi-power-off").command("#{menuView.stopSPS}")
-					.update("messages").build();
+			item = DefaultMenuItem.builder().value("Stoppe Test SPS").icon("pi pi-power-off")
+					.command("#{menuView.stopSPS}").update("messages").build();
 			secondSubmenu.getElements().add(item);
 
 			model.getElements().add(secondSubmenu);
